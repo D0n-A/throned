@@ -17,4 +17,10 @@ namespace ThronedChrome {
 // bar for the caller to place. This is the whole ritual: no window flags to set
 // and no resizer to remember.
 ThronedTitleBar *install(QWidget *window, const QString &context = {});
+
+// Windows 11 composition behind the window: pass a QWindowKit attribute such as
+// "mica", or an empty string to turn it off. Silently does nothing where the
+// platform has no such thing, and never applies in a preview: a screenshot must
+// not depend on the desktop behind it.
+void setBackdrop(const QString &attribute);
 } // namespace ThronedChrome

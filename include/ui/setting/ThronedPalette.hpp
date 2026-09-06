@@ -52,9 +52,11 @@ struct ThronedSkin {
     QString id;   // folder name
     QString name; // shown in the theme list
     ThronedThemeColors colors;
-    QString styleOverlay; // appended after the resolved base sheet, so it wins
-    QString fontFamily;   // empty leaves the application font alone
-    QString iconDir;      // disk or :/ resource path; empty uses built-in glyphs
+    QString styleOverlay;          // appended after the resolved base sheet, so it wins
+    QString fontFamily;            // empty leaves the application font alone
+    QString iconDir;               // disk or :/ resource path; empty uses built-in glyphs
+    QString backdrop;              // QWindowKit window attribute: "mica", "mica-alt", "acrylic-material"
+    unsigned int windowsBuild = 0; // hides the skin below this Windows build, and on every other system
 };
 
 namespace ThronedPalette {

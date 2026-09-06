@@ -20,6 +20,10 @@
 #include "include/global/Configs.hpp"
 #include "include/ui/setting/ThemeManager.hpp"
 #include "include/ui/widget/MaterialIcon.h"
+#include "include/ui/widget/ThronedWindowChrome.h"
+#ifdef Q_OS_WIN
+#include "include/sys/windows/WinVersion.h"
+#endif
 
 #include <QGlobalStatic>
 
@@ -180,6 +184,8 @@ void ThemeManager::ApplyTheme(const QString &theme, bool force) {
             font.setFamily(family);
             qApp->setFont(font);
         }
+        // The composition effect belongs to the skin, so leaving one turns it off.
+        ThronedChrome::setBackdrop(skin != nullptr ? skin->backdrop : QString());
     }
 
     if (this->current_theme == theme && !force) {
@@ -238,6 +244,17 @@ void ThemeManager::ApplyTheme(const QString &theme, bool force) {
     emit themeChanged(theme);
 }
 
+// A skin that asks for a Windows composition effect is offered only where that
+// effect exists. Listing it everywhere would put a dead entry in the theme menu.
+static bool skinRunsHere(const ThronedSkin &skin) {
+    if (skin.windowsBuild == 0) return true;
+#ifdef Q_OS_WIN
+    return WinVersion::IsBuildNumGreaterOrEqual(skin.windowsBuild);
+#else
+    return false;
+#endif
+}
+
 void ThemeManager::LoadSkins() {
     skins.clear();
     // Shipped skins are resources, so an ordinary install stays tidy. Disk
@@ -269,6 +286,9 @@ void ThemeManager::LoadSkins() {
         skin.id = entry.fileName();
         skin.name = json.value(QStringLiteral("name")).toString(skin.id);
         skin.fontFamily = json.value(QStringLiteral("font")).toString();
+        skin.backdrop = json.value(QStringLiteral("backdrop")).toString();
+        skin.windowsBuild = static_cast<unsigned int>(json.value(QStringLiteral("windowsBuild")).toInt(0));
+        if (!skinRunsHere(skin)) continue;
 
         // Every unset token keeps the default theme's value, so a skin can
         // restyle three things and stay coherent everywhere else.

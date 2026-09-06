@@ -1,0 +1,29 @@
+{
+  "name": "Mica (Windows 11)",
+  "backdrop": "mica",
+  "windowsBuild": 22000,
+  "dark": true,
+  "colors": {
+    "window": "#1C2026",
+    "surface": "#191D23",
+    "surfaceRaised": "#242931",
+    "surfaceHover": "#2B313A",
+    "border": "#333A44",
+    "borderStrong": "#4C5563",
+    "text": "#F3F5F7",
+    "textMuted": "#A9B1BC",
+    "textSubtle": "#727B87",
+    "accent": "#4CC2FF",
+    "accentHover": "#77D0FF",
+    "accentSoft": "#1B2C38",
+    "selection": "#16344A",
+    "selectionBorder": "#2E6B93",
+    "success": "#6CCB5F",
+    "warning": "#FCE100",
+    "danger": "#FF99A4",
+    "dangerSoft": "#3A2126",
+    "controlInactive": "#1E232A",
+    "scrollBar": "#2B313A",
+    "scrollBarHover": "#4C5563"
+  }
+}

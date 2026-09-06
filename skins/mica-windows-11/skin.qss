@@ -1,0 +1,15 @@
+/* Every rule is gated on custom-style: without the effect this skin is simply a
+   Windows 11 colour scheme, and nothing is left transparent over nothing. */
+
+/* Mica draws the desktop behind the window, so the window has to stop painting
+   its own ground. Only the window and the page body go through: every card,
+   table and panel keeps an opaque surface, because text over a stranger's
+   wallpaper is unreadable at any contrast a palette can promise. */
+QWidget[custom-style="true"] { background: transparent; }
+QWidget[custom-style="true"] QWidget#redesignedCentral { background: transparent; }
+QWidget[custom-style="true"] QWidget#body { background: transparent; }
+QWidget[custom-style="true"] QWidget#commandBar { background: transparent; }
+
+/* The strip the group pills sit on shows the backdrop between them. */
+QWidget[custom-style="true"] QTabWidget#groupsCard,
+QWidget[custom-style="true"] QTabWidget#groupsCard::pane { background: transparent; }

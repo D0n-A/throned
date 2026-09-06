@@ -837,14 +837,16 @@ int main(int argc, char *argv[]) {
         if (!useAppdata) candidates << LocalServerNameFor(appdataWd);
         return RunControlClient(candidates, arguments.mid(cliAt + 1));
     }
-
     if (useAppdata) {
         if (!appdataDir.isEmpty()) {
+            // An explicitly named profile directory is the profile. Importing
+            // someone else's into it would be a surprise, and it is what made
+            // -appdata useless for running an isolated copy.
             wd.setPath(appdataDir);
         } else {
             wd.setPath(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation));
+            MigrateLegacyConfigIfNeeded(wd);
         }
-        MigrateLegacyConfigIfNeeded(wd);
     } else {
         const QDir userWd(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation));
         MigrateLegacyConfigIfNeeded(wd);
@@ -902,7 +904,10 @@ int main(int argc, char *argv[]) {
     if (!arguments.contains(QStringLiteral("-ui-preview")) && Configs::dataManager->settingsRepo->windows_set_admin && !Configs::IsAdmin() && !Configs::dataManager->settingsRepo->disable_run_admin) {
         Configs::dataManager->settingsRepo->windows_set_admin = false; // so that if permission denied, we will run as user on the next run
         Configs::dataManager->settingsRepo->Save();
-        WinCommander::runProcessElevated(QApplication::applicationFilePath(), {}, "", 1, false);
+        // Carrying the command line over: without it an elevated relaunch loses the
+        // deeplink that started it, along with -appdata, -lang and -theme.
+        WinCommander::runProcessElevated(QApplication::applicationFilePath(), arguments.mid(1), "", 1,
+                                         false);
         QApplication::quit();
         return 0;
     }
